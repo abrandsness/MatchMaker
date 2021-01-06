@@ -5,6 +5,8 @@ import smtplib
 import random
 import pymysql.cursors
 
+#This file has many errors due to redacted passwords and email addresses
+
 
 #Funtion that connects to the database
 # Use at the beginning of each function 
