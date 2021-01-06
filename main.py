@@ -1,6 +1,5 @@
 import sys
 from question import Question
-import example_functions
 from person import Person
 import smtplib
 import random
