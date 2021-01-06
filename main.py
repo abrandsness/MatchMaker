@@ -3,12 +3,7 @@ from question import Question
 from person import Person
 import smtplib
 import random
-
 import pymysql.cursors
-
-#email: Databae374@gmail.com
-#password: asciiart
-
 
 
 #Funtion that connects to the database
@@ -26,7 +21,7 @@ def connect(database, root_password):
 # Input: QuestionID 
 # Output: list of ResponseID and list of ResponseText from MatchResponse Table
 def getQuestionResponse(questionID):
-    connection = connect('Databae', 'brandsness')
+    connection = connect('Databae', root_password)
     MRresponseID = []
     MRresponseText = []
     try:
@@ -49,7 +44,7 @@ def getQuestionResponse(questionID):
 # Input: QuestionID. 
 # Output: points of that question from Questions Table
 def getQuestionPoints(questionID):
-    connection = connect('Databae', 'brandsness')
+    connection = connect('Databae', root_password)
     try:
         with connection.cursor() as cursor:
             sql = 'SELECT points FROM Questions WHERE ID = '
@@ -65,7 +60,7 @@ def getQuestionPoints(questionID):
 
 # Output: returns a list of personIDs
 def GetPersonIDList():
-    connection = connect('Databae', 'brandsness')
+    connection = connect('Databae', root_password)
     IDs = []
     try:
         with connection.cursor() as cursor:
@@ -80,7 +75,7 @@ def GetPersonIDList():
 
 # Output: returns a list of QuestionIDs
 def GetQuestionIDList():
-    connection = connect('Databae', 'brandsness')
+    connection = connect('Databae', root_password)
     IDs = []
     try:
         with connection.cursor() as cursor:
@@ -96,7 +91,7 @@ def GetQuestionIDList():
 # Input: PersonID
 # Output: Everything from PersonID about that person
 def GetPersonInfo(personID):
-    connection = connect('Databae', 'brandsness')
+    connection = connect('Databae', root_password)
     try:
         with connection.cursor() as cursor:
             sql = 'SELECT ID, FirstName, LastName, email, bio, ReferredBy FROM PersonInfo '
@@ -120,7 +115,7 @@ def GetPersonInfo(personID):
 def GetPersonAnswer(personID):
     QuestionID = []
     Answers = []
-    connection = connect('Databae', 'brandsness')
+    connection = connect('Databae', root_password)
     try:
         with connection.cursor() as cursor:
             sql = 'SELECT QuestionID, Answer '
@@ -179,9 +174,9 @@ def sendEmail(email, full_text):
     header = 'Subject: ' + ' Databae Questionnaire Matchmaking Results'
     message = header + '\n\n' + full_text
  
-    server = smtplib.SMTP('smtp.gmail.com',587) # It might be ('smtp.gmail.com:587') or ('...',587)
+    server = smtplib.SMTP('smtp.gmail.com',587) 
     server.starttls()
-    server.login('databae374@gmail.com','asciiart')
+    server.login(email_address, email_password)
     server.sendmail('Databae', email, message)
     server.quit()
 
@@ -289,8 +284,9 @@ QIDs, questions = MakeQuestionObjects()
 #       e.g. : questions_matched[1,2] is the list containing matched question IDs of the people with IDs 1 and 2
 matches, questions_matched = CalculateMatchPoints()
 
-findTopMatches(matches, 3, 42) # generate Spencer's top 3 matches (ID = 42)
-spencer_email, full_text = generateEmail(42) # generate Spencer's email text
-sendEmail('databae374@gmail.com', full_text) # send email to our project email for demo purposes
+for id in PIDs:
+    findTopMatches(matches, 3, id) # generate ID's top 3 matches 
+    email, full_text = generateEmail(id) # generate ID's email text
+    sendEmail(email, full_text) # send email 
 
 
